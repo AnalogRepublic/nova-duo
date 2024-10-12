@@ -10,12 +10,12 @@ class DuoAuthenticator
 {
     public function passedDuo(Request $request): bool
     {
-        return $request->session()->has('duo_passed:' . $request->user()?->id);
+        return $request->session()->has('duo_passed:' . $request->user(config('nova.guard'))?->id);
     }
 
     public function setPassedDuo(Request $request): bool
     {
-        return $request->session()->put('duo_passed:' . $request->user()?->id, true);
+        return $request->session()->put('duo_passed:' . $request->user(config('nova.guard'))?->id, true);
     }
 
     public function getRedirect(Request $request, array $config, string $callbackUrl): string|null
@@ -23,7 +23,7 @@ class DuoAuthenticator
         try {
             $client = $this->getClient($config, $callbackUrl);
 
-            $username = $request->user()->email;
+            $username = $request->user(config('nova.guard'))->email;
             $state = $client->generateState();
             $this->storeState($request, $state);
             return $client->createAuthUrl($username, $state);
@@ -59,7 +59,7 @@ class DuoAuthenticator
     {
         try {
             $client = $this->getClient($config);
-            $decodedToken = $client->exchangeAuthorizationCodeFor2FAResult($request->get('code'), $request->user()->email);
+            $decodedToken = $client->exchangeAuthorizationCodeFor2FAResult($request->get('code'), $request->user(config('nova.guard'))->email);
             return true;
         } catch (\Exception $e) {
             Log::error('Duo failed');

@@ -6,13 +6,10 @@ namespace AnalogRepublic\NovaDuo\Http\Middleware;
 
 use AnalogRepublic\NovaDuo\DuoAuthenticator;
 use Closure;
-use AnalogRepublic\NovaDuo\Helpers\NovaUser;
 use Illuminate\Support\Facades\Auth;
 
 class Duo
 {
-    use NovaUser;
-
     /**
      * Handle an incoming request.
      *
@@ -26,7 +23,7 @@ class Duo
         $except = [
             'nova-vendor/nova-duo/callback',
         ];
-        if (!config('nova-duo.enabled') || in_array($request->path(),$except) || !$request->user()) {
+        if (!config('nova-duo.enabled') || in_array($request->path(),$except) || !$request->user(config('nova.guard'))) {
             return $next($request);
         }
 
