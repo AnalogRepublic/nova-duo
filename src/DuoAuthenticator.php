@@ -59,7 +59,7 @@ class DuoAuthenticator
     {
         try {
             $client = $this->getClient($config);
-            $decodedToken = $client->exchangeAuthorizationCodeFor2FAResult($request->get('code'), $request->user(config('nova.guard'))->email);
+            $decodedToken = $client->exchangeAuthorizationCodeFor2FAResult($request->get('duo_code'), $request->user(config('nova.guard'))->email);
             return true;
         } catch (\Exception $e) {
             Log::error('Duo failed');

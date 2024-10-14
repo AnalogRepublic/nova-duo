@@ -32,7 +32,7 @@ class Duo
             return $next($request);
         }
 
-        $callbackUrl = url(config('nova.path') . '/nova-vendor/nova-duo/callback');
+        $callbackUrl = url('/nova-vendor/nova-duo/callback');
         $duoUrl = $authenticator->getRedirect($request, config('nova-duo.duo'), $callbackUrl);
 
         if (!$duoUrl) {
