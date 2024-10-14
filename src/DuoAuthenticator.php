@@ -18,10 +18,10 @@ class DuoAuthenticator
         return $request->session()->put('duo_passed:' . $request->user(config('nova.guard'))?->id, true);
     }
 
-    public function getRedirect(Request $request, array $config, string $callbackUrl): string|null
+    public function getRedirect(Request $request, array $config): string|null
     {
         try {
-            $client = $this->getClient($config, $callbackUrl);
+            $client = $this->getClient($config);
 
             $username = $request->user(config('nova.guard'))->email;
             $state = $client->generateState();
@@ -69,13 +69,13 @@ class DuoAuthenticator
         }
     }
 
-    private function getClient(array $config, string $callbackUrl = ''): Client
+    private function getClient(array $config): Client
     {
         $client = new Client(
             $config['client_id'],
             $config['client_secret'],
             $config['api_hostname'],
-            $callbackUrl,
+            url('/nova-vendor/nova-duo/callback'),
             true
         );
 
