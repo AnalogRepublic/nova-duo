@@ -13,9 +13,9 @@ class DuoAuthenticator
         return $request->session()->has('duo_passed:' . $request->user(config('nova.guard'))?->id);
     }
 
-    public function setPassedDuo(Request $request): bool
+    public function setPassedDuo(Request $request): void
     {
-        return $request->session()->put('duo_passed:' . $request->user(config('nova.guard'))?->id, true);
+        $request->session()->put('duo_passed:' . $request->user(config('nova.guard'))?->id, true);
     }
 
     public function getRedirect(Request $request, array $config): string|null
